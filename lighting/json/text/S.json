@@ -1,0 +1,9 @@
+[
+	{ "info"  : { "name": "S.json", "type": "ascii", "value": "S" }},
+	{ "points": [0,1,1,1] },	
+	{ "points": [1,0,0,0] },	
+	{ "points": [0,1,1,0] },	
+	{ "points": [0,0,0,1] },	
+	{ "points": [1,1,1,0] }
+]
+
