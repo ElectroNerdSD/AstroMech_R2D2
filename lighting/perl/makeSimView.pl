@@ -55,18 +55,20 @@ sub createSerpentineLayout() {
     my($xStart,$xEnd,$yStart,$yEnd) = &calculatePoints($xSpace,$columns,$ySpace,$rows,$verbose);
 
     my ($y0,$y1,$yspace) = $topBottom eq "top"  ?  ($yStart,$yEnd,sprintf("%1.4f",-1.0*$ySpace)) : ($yEnd,$yStart,$ySpace) ;
-    my @yArray = &buildCoordArray($y0,$y1,$topBottom,$yspace,$verbose);
+    my @yArray = &buildCoordArray($y0,$y1,$rows,$topBottom,$yspace,$verbose);
 
     my ($x0,$x1,$xspace) = $leftRight eq "left" ?  ($xEnd,$xStart,$xSpace) : ($xStart,$xEnd,sprintf("%1.4f",-1.0*$xSpace)) ;
-    my @xArray = &buildCoordArray($x0,$x1,$leftRight,$xspace,$verbose);
+    my @xArray = &buildCoordArray($x0,$x1,$columns,$leftRight,$xspace,$verbose);
 
-    my $counter = 1;
-    foreach my $xCoord (@xArray) {
-        foreach my $yCoord (@yArray) {
-            print JSON sprintf("    { \"point\": [%s,%s,0] }%s\n",$xCoord>=0 ? " $xCoord" : "$xCoord",$yCoord>=0 ? " $yCoord" : "$yCoord",$counter<=($rows*$columns)-1 ? "," : ""); 
-            $counter++;
-            #print "$counter\n";
+    my $total_counter = 1;
+    my $type_counter  = 0;
+    foreach my $yCoord (@yArray) {
+        my @tempxArray = $leftRight eq "left" && ${type_counter}%2 || $leftRight eq "right" && ${type_counter}%2 ? reverse(@xArray) : @xArray ;
+        foreach my $xCoord (@tempxArray) {
+            print JSON sprintf("    { \"point\": [%s,%s,0] }%s\n",$xCoord>=0 ? " $xCoord" : "$xCoord",$yCoord>=0 ? " $yCoord" : "$yCoord",$total_counter<=($rows*$columns)-1 ? "," : ""); 
+            $total_counter++;
         }
+        $type_counter++;
     }
 
 
@@ -76,6 +78,7 @@ sub buildCoordArray() {
 
     my $start   = shift;
     my $end     = shift;
+    my $count   = shift;
     my $type    = shift;
     my $space   = shift;
     my $verbose = shift;
@@ -85,7 +88,6 @@ sub buildCoordArray() {
     if(defined $verbose) { print "*INFO: building $type coords for starting $start, ending $end points, using spacing of $space.\n" } 
 
     for(my $i=$start; $space<0 ? $i>=$end : $i<=$end ; $i=sprintf("%1.4f",$i+$space)) {
-        print "i $i\n";
       push(@coords,sprintf("%1.4f",$i));
     }
 
