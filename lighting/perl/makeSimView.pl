@@ -27,7 +27,7 @@ my $type      = $1;
 my $topBottom = $2;
 my $leftRight = $3;
 
-print "*INFO: Writting $outfile in, $1 $2 $3 $row x $column\n";
+print "*INFO: Writting $outfile in, $1 $2 $3 $column x $row\n";
 
 open(JSON,">$outfile") || die "ERROR: Unable to open your json $outfile file for write, $!\n";
 
@@ -50,9 +50,27 @@ sub createSerpentineLayout() {
     #calculate the end points and spacing based on row column 
     my($xStart,$xEnd,$xSpace,$yStart,$yEnd,$ySpace) = &calculateEndPointsAndSpace($row,$xRange,$column,$yRange,$verbose);
 
-    my ($y0,$y1) = $topBottom eq "top"  ?  ($yEnd,$yStart) : ($yStart,$yEnd) ;
-    my ($x0,$x1) = $rightLeft eq "left" ?  ($xStart,$xEnd) : ($xEnd,$xStart) ;
+    my ($y0,$y1,$ySpace) = $topBottom eq "top"  ?  ($yEnd,$yStart,sprintf("%1.4f",-1.0*$ySpace)) : ($yStart,$yEnd,$ySpace) ;
+    my ($x0,$x1,$xSpace) = $leftRight eq "left" ?  ($xStart,$xEnd,$xSpace) : ($xEnd,$xStart,sprintf("%1.4f",-1.0*$xSpace)) ;
 
+    my @yArray = &buildCoordArray($y0,$y1,$topBottom,$ySpace,$verbose);
+    my @xArray = &buildCoordArray($x0,$x1,$leftRight,$xSpace,$verbose);
+
+
+}
+sub buildCoordArray() {
+
+    my $start   = shift;
+    my $end     = shift;
+    my $type    = shift;
+    my $space   = shift;
+    my $verbose = shift;
+
+    if(defined $verbose) { print "*INFO: building $type coords for starting $start, ending $end points, using spacing of $space.\n" } 
+
+    for(my $i=$start; $i!=$end; $i=$i+$space) {
+      print  sprintf("i %1.4f\n",$i);
+    }
 
 }
 
