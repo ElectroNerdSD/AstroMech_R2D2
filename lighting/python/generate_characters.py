@@ -12,16 +12,17 @@ try:
 except ImportError:
     import simplejson as json
 
-def load_json(lightEngine,json_filename="../json/numbers/1.json"):
+def load_json(lightEngine,json_filename="../json/text/P.json"):
 
     try:
 
-        points = []
-        name   = None
-        type   = None
-        value  = None
-        height = 0
-        length = 0
+        points    = []
+        name      = None
+        char_type = None
+        tag       = None
+        value     = None
+        height    = 0
+        length    = 0
 
         #load the json file
         for item in json.load(open(json_filename)):
@@ -30,7 +31,9 @@ def load_json(lightEngine,json_filename="../json/numbers/1.json"):
                 if "name" in item['info']:
                     name = item['info']['name']
                 if "type" in item['info']:
-                    type = item['info']['type']
+                    char_type = item['info']['type']
+                if "tag" in item['info']:
+                    tag = item['info']['tag']
                 if "value" in item['info']:
                     value = item['info']['value']
 
@@ -48,12 +51,14 @@ def load_json(lightEngine,json_filename="../json/numbers/1.json"):
             else:
                 print "error: item has bad key\n"
 
-        print "name {} : type {} : value {} : height {} : length {} : points {}".format(name,type,value,height,length,points)
+        lightEngine.buildCharacter(name,char_type,tag,value,height,length,points,json_filename)
+        ledObj = lightEngine.buildCharacter(name,char_type,tag,value,height,length,points,json_filename)
+        print "{}\n".format(ledObj)
         
 
-    except:
+    except R2Error as e :
 
-        print "FRACK\n";
+        print "{}\n".format(e.value);
 
 def main():
     print "Initializing character objects..."
