@@ -4,7 +4,7 @@ import re
 
 class R2LEDCharacter(object):
 
-    def __init__(self,name,char_type,value,height,length,points,json_filename,appObj=None):
+    def __init__(self,name,char_type,tag,value,height,length,points,json_filename,appObj=None):
 
         #do some basic error checks
         if name is None:
@@ -28,11 +28,10 @@ class R2LEDCharacter(object):
             for point in point_set:
                 if (type(point) != IntType) or  (point < 0  or point >1):
                     raise R2Error("ERROR: \"points\" set {} in {} should only contain integers 0 or 1.".format(point_set,json_filename))
-                else:
-                    print "{}".format(type(point)==IntType)
 
         self.name      = name
         self.char_type = char_type
+        self.tag       = tag
         self.value     = value
         self.height    = height
         self.length    = length
@@ -40,7 +39,14 @@ class R2LEDCharacter(object):
         self.json      = json_filename
 
     def __str__(self):
+
+        char_string = ""
+
         for point_set in self.points:
-            print "{}".format(point_set)
-        return repr(self)
+            point_string = ""
+            for point in point_set:
+                point_string = "{}{}".format(point_string,"*" if point==1 else " ")
+            char_string = "{}\t\t{}\t\t{}\n".format(char_string,point_set,point_string)
+
+        return "{}\n\tname :{}\n\ttag  : {}\n\tfile :{}\n\tvalue:\n{}".format(repr(self),self.name,self.tag,self.json,char_string)
 
