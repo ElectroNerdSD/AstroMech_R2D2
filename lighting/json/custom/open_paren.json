@@ -1,0 +1,9 @@
+[
+	{ "info"  : { "name": "open_paren.json", "type": "custom","value" : "custom", "tag": "open_paren" }},
+	{ "points": [0,1] },	
+	{ "points": [1,0] },	
+	{ "points": [1,0] },	
+	{ "points": [1,0] },	
+	{ "points": [0,1] }
+]
+
