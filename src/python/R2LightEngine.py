@@ -13,12 +13,28 @@ class R2LightEngine(object):
     def __init__(self,appObject=None):
 
         self.R2AppObject = appObject
-        self._data       = {}
+        self._ledData    = {}
+        self._HEIGHT     = 5   #height all characters must be
 
     def buildCharacter(self,name,char_type,tag,value,height,length,points,json_filename):
 
         try:
+
+            #build a led character object for each json file
             ledChar = R2LEDCharacter(name,char_type,tag,value,height,length,points,json_filename,self.R2AppObject)
+
+            if ledChar.char_type == "custom":
+                lookup = ledChar.tag
+            else:
+                lookup = ledChar.value
+
+            #check to make sure a object with same look up doesn't already exist
+            if self._ledData.has_key(lookup):
+                raise R2Error("ERROR: It appears a duplicate json entry exists, please check the json files for value or tag \"{}\".".format(lookup))
+            else:
+                #store the objects for later
+                self._ledData[lookup]=ledChar
+
             return(ledChar)
 
         except R2Error as e:
@@ -63,12 +79,11 @@ class R2LightEngine(object):
                 else:
                     pass
 
-            self.buildCharacter(name,char_type,tag,value,height,length,points,json_filename)
             return(self.buildCharacter(name,char_type,tag,value,height,length,points,json_filename))
 
         except R2Error as e :
 
-            raise e
+            raise(e)
 
         except: 
 
