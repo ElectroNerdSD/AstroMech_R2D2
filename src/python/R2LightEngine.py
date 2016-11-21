@@ -14,7 +14,7 @@ class R2LightEngine(object):
 
         self.R2AppObject = appObject
         self._ledData    = {}
-        self._HEIGHT     = 5   #height all characters must be
+        self._minHeight  = 5   #height all characters must be
 
     def buildCharacter(self,name,char_type,tag,value,height,length,points,json_filename):
 
@@ -30,7 +30,9 @@ class R2LightEngine(object):
 
             #check to make sure a object with same look up doesn't already exist
             if self._ledData.has_key(lookup):
-                raise R2Error("ERROR: It appears a duplicate json entry exists, please check the json files for value or tag \"{}\".".format(lookup))
+                raise R2Error("ERROR: It appears json file {} contains a duplicate value/tag entry, please check the other json files for value or tag \"{}\".".format(ledChar.name,lookup))
+            elif ledChar.height != self._minHeight:
+                raise R2Error("ERROR: It appears json entry {} doesn't meet the min height requirement, please check the json file.".format(ledChar.name))
             else:
                 #store the objects for later
                 self._ledData[lookup]=ledChar
