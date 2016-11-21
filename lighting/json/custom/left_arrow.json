@@ -1,0 +1,8 @@
+[
+	{ "info"  : { "name": "left_arrow.json", "type": "custom", "tag": "left_arrow" }},
+	{ "points": [0,0,0,1,0,0,0,0] },	
+	{ "points": [0,1,1,1,1,1,1,1] },	
+	{ "points": [1,1,1,1,1,1,1,1] },	
+	{ "points": [0,1,1,1,1,1,1,1] },	
+	{ "points": [0,0,0,1,0,0,0,0] }
+]

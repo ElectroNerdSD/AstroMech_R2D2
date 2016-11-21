@@ -1,0 +1,8 @@
+[
+	{ "info"  : { "name": "right_angle.json", "type": "custom", "tag": "right_angle" }},
+	{ "points": [1,0,0] },	
+	{ "points": [0,1,0] },	
+	{ "points": [0,0,1] },	
+	{ "points": [0,1,0] },	
+	{ "points": [1,0,0] }
+]

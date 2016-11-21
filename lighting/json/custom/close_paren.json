@@ -1,9 +1,8 @@
 [
-	{ "info"  : { "name": "close_paren.json", "type": "custom","value" : "custom", "tag": "close_paren" }},
+	{ "info"  : { "name": "close_paren.json", "type": "custom", "tag": "close_paren" }},
 	{ "points": [1,0] },	
 	{ "points": [0,1] },	
 	{ "points": [0,1] },	
 	{ "points": [0,1] },	
 	{ "points": [1,0] }
 ]
-
