@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 
 """
-comments go here
+    Script to generate led character objects from each json file.
+    No cli argument, results in all objects created, pass in single json 
+    file as first argument and that file will be loaded individually.
 """
 
 import glob
