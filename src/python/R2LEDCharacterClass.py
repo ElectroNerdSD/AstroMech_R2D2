@@ -11,7 +11,7 @@ class R2LEDCharacter(object):
             raise R2Error("ERROR: \"name\" entry in {} is not defined properly or is missing.".format(json_filename))
         if char_type is None:
             raise R2Error("ERROR: \"char_type\"  entry in {} is not defined properly or is missing.".format(json_filename))
-        if value is None:
+        if char_type != "custom" and value is None:
             raise R2Error("ERROR: \"value\"  entry in {} is not defined properly or is missing.".format(json_filename))
         if height is None:
             raise R2Error("ERROR: \"height\"  entry in {} is not defined properly or is missing.".format(json_filename))
