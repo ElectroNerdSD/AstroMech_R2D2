@@ -32,6 +32,9 @@ def main():
             for file_name in fileList:
                 ledObj = lightEngine.loadJson(file_name)
 
+        #hello world
+        ledArray = lightEngine.buildString()
+
     except R2Error as e:
         print e.value
 
