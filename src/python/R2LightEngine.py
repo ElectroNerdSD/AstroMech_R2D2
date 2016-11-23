@@ -1,6 +1,6 @@
 from R2ErrorClass import R2Error
 from R2LEDCharacterClass import R2LEDCharacter
-
+import re
 import sys
 
 try:
@@ -41,6 +41,23 @@ class R2LightEngine(object):
 
         except R2Error as e:
             raise(e)
+
+    def buildString(self,messageString="<tag:left_arrow> HELLO WORLD <tag:heart> <tag:right_arrow>",displaySize="large",onColor=(255,0,0),offColor=(0,0,0)):
+
+        print "working on string {} size {} onColor {} offColor {}\n".format(messageString,displaySize,onColor,offColor) 
+       
+        #replace all white space with tag for space
+        whiteSpace = re.compile(r'\s')
+        messageString = whiteSpace.sub("<tag:space>",messageString)
+
+        lookupRegex = re.compile(r'([A-Z0-9])|^|\b<tag:(\S+)>\b|$')
+        groups = lookupRegex.findall(messageString)
+
+        print "groups {}\n".format(groups)
+        print "new message {}\n".format(messageString)
+        #for i in messageString:
+        #    print "i {}\n".format(i)
+
 
     def loadJson(self,json_filename="../json/text/A.json"):
 
