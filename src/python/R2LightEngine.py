@@ -42,22 +42,67 @@ class R2LightEngine(object):
         except R2Error as e:
             raise(e)
 
-    def buildString(self,messageString="<tag:left_arrow> HELLO WORLD <tag:heart> <tag:right_arrow>",displaySize="large",onColor=(255,0,0),offColor=(0,0,0)):
+    def buildMessageObjects(self,messageString="<tag:left_arrow> <tag:heart> HELLO WORLD <tag:heart> <tag:right_arrow>",displaySize="large",onColor=(255,0,0),offColor=(0,0,0),keepColor=True):
 
-        print "working on string {} size {} onColor {} offColor {}\n".format(messageString,displaySize,onColor,offColor) 
-       
         #replace all white space with tag for space
         whiteSpace = re.compile(r'\s')
         messageString = whiteSpace.sub("<tag:space>",messageString)
 
-        lookupRegex = re.compile(r'([A-Z0-9])|^|\b<tag:(\S+)>\b|$')
-        groups = lookupRegex.findall(messageString)
+        #regex to break up letters and capture custom tags
+        lookupRegex = re.compile(r'([A-Z0-9])|<tag:\s*(\w+)\s*>')
+        matchList = lookupRegex.findall(messageString)
 
-        print "groups {}\n".format(groups)
-        print "new message {}\n".format(messageString)
-        #for i in messageString:
-        #    print "i {}\n".format(i)
+        messageObjects = []
 
+        #what size logic display are we using
+        if displaySize=="large":
+            blank = self._ledData['large_blank']
+        elif displaySize=="small":
+            blank = self._ledData['small_blank']
+        else:
+            pass
+
+        #add the blank at front of display
+        messageObjects.append(blank)
+        self._messageLength = blank.length
+
+        for tag in matchList:
+
+            try:
+                if len(tag[0]):
+                    ledChar = self._ledData[tag[0]]
+                elif len(tag[1]):
+                    ledChar = self._ledData[tag[1]]
+                else:
+                    pass
+
+                #fill the matrix with colors, if needed
+                ledChar.processPoints(onColor,offColor,keepColor)
+                self._messageLength =  self._messageLength + ledChar.length
+
+            except KeyError as e:
+                raise R2Error("ERROR: It appears json files are missing a character for tag: {}.\n".format(e))
+
+            #create a list of led objects that contain the message
+            messageObjects.append(ledChar)
+
+        self._message = messageObjects
+        return(messageObjects)
+
+    def buildMessageMatrix(self):
+
+        totalLength = 0
+
+        #create empty matrix
+        messageMatrix = [[0 for row in range(self._messageLength)] for col in range(self._minHeight)]
+
+        col = 0
+        for ledObj in self._message:
+            row = 0
+            totalLength = totalLength + ledObj.length
+            pass
+
+        print "total length = {} {}\n".format(totalLength,self._messageLength)
 
     def loadJson(self,json_filename="../json/text/A.json"):
 

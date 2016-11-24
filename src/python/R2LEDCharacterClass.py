@@ -31,12 +31,34 @@ class R2LEDCharacter(object):
 
         self.name      = name
         self.char_type = char_type
+        self._colorData= None
         self.tag       = tag
         self.value     = value
         self.height    = height
         self.length    = length
         self.points    = points
         self.json      = json_filename
+
+    def processPoints(self,onColor,offColor,keepColor=True):
+
+        #no need to process if we have already done it
+        if self._colorData and keepColor:
+            return()
+
+        #initialize a matrix for the colors to be used
+        processedList = [[0 for row in range(self.length)] for col in range(self.height)]
+
+        for row in range(self.height):
+            for col in range(self.length):
+                pointData = self.points[row][col]
+                if pointData == 1:
+                    processedList[row][col]=onColor
+                else:
+                    processedList[row][col]=offColor
+
+        self._colorData = processedList
+
+        return(processedList)
 
     def __str__(self):
 
