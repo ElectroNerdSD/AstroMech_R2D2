@@ -33,7 +33,8 @@ def main():
                 ledObj = lightEngine.loadJson(file_name)
 
         #hello world
-        ledArray = lightEngine.buildString()
+        lightEngine.buildMessageObjects()
+        lightEngine.buildMessageMatrix()
 
     except R2Error as e:
         print e.value
