@@ -14,8 +14,8 @@ class R2Phrase(object):
 
         if self.points:
             for idx in range(0,len(ledChar.points)):
-                for idx2 in range(0,len(ledChar.points[idx])):
-                    self.points[idx].append(ledChar.points[idx][idx2])
+                for idx2 in range(0,len(ledChar._colorData[idx])):
+                    self.points[idx].append(ledChar._colorData[idx][idx2])
         else:
             self.points = ledChar._colorData 
 
@@ -23,13 +23,10 @@ class R2Phrase(object):
 
     def __str__(self):
 
-        char_string = ""
+        point_string = ""
 
         for point_set in self.points:
-            point_string = ""
-            for point in point_set:
-                point_string = "{}{}".format(point_string,"*" if point==1 else " ")
-            char_string = "{}\t\t{}\t\t{}\n".format(char_string,point_set,point_string)
+            point_string = "{}{}\n\n".format(point_string,point_set)
 
-        return "{}\n\tname :{}\n\ttag  : {}\n\tfile :{}\n\tvalue:\n{}".format(repr(self),self.name,self.tag,self.json,char_string)
+        return "{}\n{}".format(repr(self),point_string)
 

@@ -1,5 +1,7 @@
 from R2ErrorClass import R2Error
 from R2LEDCharacterClass import R2LEDCharacter
+from R2PhraseClass import R2Phrase
+
 import re
 import sys
 
@@ -14,6 +16,7 @@ class R2LightEngine(object):
 
         self.R2AppObject = appObject
         self._ledData    = {}
+        self._phrases    = {}
         self._minHeight  = 5   #height all characters must be
 
     def buildCharacter(self,name,char_type,tag,value,height,length,points,json_filename):
@@ -42,7 +45,7 @@ class R2LightEngine(object):
         except R2Error as e:
             raise(e)
 
-    def buildMessageObjects(self,messageString="<tag:left_arrow> <tag:heart> HELLO WORLD <tag:heart> <tag:right_arrow>",displaySize="large",onColor=(255,0,0),offColor=(0,0,0),keepColor=True):
+    def buildMessageObjects(self,messageString="<tag:left_arrow> <tag:heart> HELLO WORLD <tag:heart> <tag:right_arrow>",displayName="rearLogic",onColor=(255, 0 , 0 ),offColor=( 0 , 0 , 0 ),keepColor=True):
 
         #replace all white space with tag for space
         whiteSpace = re.compile(r'\s')
@@ -52,7 +55,14 @@ class R2LightEngine(object):
         lookupRegex = re.compile(r'([A-Z0-9])|<tag:\s*(\w+)\s*>')
         matchList = lookupRegex.findall(messageString)
 
-        messageObjects = []
+        if displayName == "rearLogic":
+            displaySize = "large"
+        elif displayName == "frontLogicUpper" or displayName == "frontLogicLower":
+            displaySize = "small"
+        else:
+            raise R2Error("ERROR: display size, for display named {} for buildMessageObject not support".format(displayName))
+
+        phraseObj = R2Phrase(displaySize,self.R2AppObject)
 
         #what size logic display are we using
         if displaySize=="large":
@@ -63,8 +73,8 @@ class R2LightEngine(object):
             pass
 
         #add the blank at front of display
-        messageObjects.append(blank)
-        self._messageLength = blank.length
+        blank.processPoints(onColor,offColor,keepColor)
+        phraseObj.append(blank)
 
         for tag in matchList:
 
@@ -78,31 +88,16 @@ class R2LightEngine(object):
 
                 #fill the matrix with colors, if needed
                 ledChar.processPoints(onColor,offColor,keepColor)
-                self._messageLength =  self._messageLength + ledChar.length
 
             except KeyError as e:
                 raise R2Error("ERROR: It appears json files are missing a character for tag: {}.\n".format(e))
 
             #create a list of led objects that contain the message
-            messageObjects.append(ledChar)
+            phraseObj.append(ledChar)
 
-        self._message = messageObjects
-        return(messageObjects)
+        self._phrases[displayName] = phraseObj
 
-    def buildMessageMatrix(self):
-
-        totalLength = 0
-
-        #create empty matrix
-        messageMatrix = [[0 for row in range(self._messageLength)] for col in range(self._minHeight)]
-
-        col = 0
-        for ledObj in self._message:
-            row = 0
-            totalLength = totalLength + ledObj.length
-            pass
-
-        print "total length = {} {}\n".format(totalLength,self._messageLength)
+        return(phraseObj)
 
     def loadJson(self,json_filename="../json/text/A.json"):
 
